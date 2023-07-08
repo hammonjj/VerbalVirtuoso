@@ -5,6 +5,7 @@ import LoggedInNavigationBar from "./components/LoggedInNavigationBar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import LoggedOutNavigationBar from "@components/LoggedOutNavigationBar";
 import { supabase } from "@utils/supabaseClient";
+import { UserProvider } from "@contexts/UserProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,11 +29,16 @@ export default function AppContent() {
       setSession(session)
     })
   }, []);
-  
+
   return (
     <QueryClientProvider client={queryClient}>          
-        {session ? <LoggedInNavigationBar /> : <LoggedOutNavigationBar />}
-      <ReactQueryDevtools initialIsOpen={false} />
+        {session ? (
+          <UserProvider>
+            <LoggedInNavigationBar />
+          </UserProvider>
+          ) : 
+          <LoggedOutNavigationBar />}
+      <ReactQueryDevtools initialIsOpen={false} position="top-right" />
     </QueryClientProvider>
   )
 }

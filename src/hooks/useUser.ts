@@ -1,18 +1,23 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@utils/supabaseClient'
-import { User } from '@supabase/supabase-js';
+import { useContext } from 'react';
+import { UserContext } from '@contexts/UserContext';
 
 export default function useUser() {
-    const [user, setUser] = useState<User | null>(null);
+    const context = useContext(UserContext);
+    if(!context) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
 
-    useEffect(() => {
-        async function getUserData() {
-            const userData = await supabase.auth.getUser();
-            setUser(userData.data.user);
-        }
+    return context.user;
+    // const [user, setUser] = useState<User | null>(null);
 
-        getUserData();
-    }, []);
+    // useEffect(() => {
+    //     async function getUserData() {
+    //         const userData = await supabase.auth.getUser();
+    //         setUser(userData.data.user);
+    //     }
 
-    return user;
+    //     getUserData();
+    // }, []);
+
+    // return user;
 }
