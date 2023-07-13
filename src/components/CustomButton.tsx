@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 interface CustomButtonProps {
   onClick: () => void;
+  label: string;
 }
 
 export default function CustomButton(props: CustomButtonProps) {
@@ -20,7 +21,7 @@ export default function CustomButton(props: CustomButtonProps) {
         justifyContent: 'flex-start'
        }}
     >
-      New Chat
+      {props.label}
     </Button>
   );
 };

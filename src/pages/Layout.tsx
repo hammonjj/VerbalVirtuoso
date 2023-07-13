@@ -5,6 +5,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useContext } from "react";
 import { Outlet } from "react-router-dom";
 
+
 export default function Layout() {
   const { darkMode } = useContext(SettingsContext);
   
