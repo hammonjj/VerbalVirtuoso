@@ -15,7 +15,7 @@ export default function CreatePromptBoxDialog(props: CreatePromptBoxDialogProps)
   const [temperature, setTemperature] = useState<number | null>(0.5);
 
   function handleChange(event: SelectChangeEvent<ChatGPTModel>) {
-    setModel(event.target.value);
+    setModel(event.target.value as ChatGPTModel);
   }
 
   return (
