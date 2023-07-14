@@ -1,4 +1,5 @@
 import CustomButton from "@components/CustomButton";
+import { isMobileDevice } from "@utils/helpers";
 import { ChatAction } from "@utils/types";
 
 interface ChatHeaderProps {
@@ -10,10 +11,9 @@ export default function ChatHeader(props: ChatHeaderProps) {
     props.dispatch({ type: "CLEAR_MESSAGES" });
   }
 
+  const marginTop = isMobileDevice() ? "0rem" : "1rem";
   return (
-    <div style={{ display: "flex", marginBottom: "1rem" }}>
-      <CustomButton label="Model 3.5" onClick={() => {}} />
-      <CustomButton label="Model 4.0" onClick={() => {}} />
+    <div style={{ display: "flex", marginBottom: "1rem", marginTop: marginTop }}>
       <CustomButton label="Clear Chat" onClick={clearMessages} />
     </div>
   );

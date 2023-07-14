@@ -5,13 +5,15 @@ import SendIcon from '@mui/icons-material/Send';
 
 interface ChatTextInputProps {
   dispatch: React.Dispatch<ChatAction>;
+  isBotReady: boolean;
+  loadingResponse: boolean;
 }
 
 export default function ChatTextInput(props: ChatTextInputProps) {
   const [message, setMessage] = useState("");
 
   function onMessageSend() {
-    props.dispatch({ type: "ADD_MESSAGE", payload: message });
+    props.dispatch({ type: "ADD_MESSAGE", payload: { message: message, submission: "USER"} });
     setMessage("");
   }
 
@@ -27,6 +29,7 @@ export default function ChatTextInput(props: ChatTextInputProps) {
       id="outlined-multiline-static"
       label="Message"
       value={message}
+      disabled={!props.isBotReady || props.loadingResponse}
       onChange={(e) => setMessage(e.target.value)}
       onKeyDown={handleKeyDown}
       multiline
@@ -40,6 +43,7 @@ export default function ChatTextInput(props: ChatTextInputProps) {
               type="button" 
               aria-label="send"
               onClick={onMessageSend}
+              disabled={!props.isBotReady || props.loadingResponse}
             >
               <SendIcon />
             </IconButton>

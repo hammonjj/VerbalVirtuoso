@@ -2,10 +2,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/
 
 interface ConfirmDialogProps {
   title: string;
-  children: string;
+  children: React.ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
   onConfirm: () => void;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
+  disableBackdropClick?: boolean;
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps) {
@@ -16,6 +18,8 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="confirm-dialog"
+      fullWidth
+      maxWidth={props.maxWidth ?? "sm"}
     >
       <DialogTitle id="confirm-dialog">{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
@@ -24,7 +28,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
           variant="outlined"
           onClick={() => setOpen(false)}
         >
-          No
+          Cancel
         </Button>
         <Button
           variant="contained"
@@ -34,7 +38,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
           }}
           color="primary"
         >
-          Yes
+          Save
         </Button>
       </DialogActions>
     </Dialog>

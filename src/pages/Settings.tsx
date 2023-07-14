@@ -1,33 +1,65 @@
-import { Button } from '@mui/material';
-import { supabase } from '@utils/supabaseClient';
+import { useReducer } from 'react';
+import { SettingsAccordionAction } from '@utils/types';
 import PreferencesAccordion from '@components/Settings/PreferencesAccordion';
 import AccountAccordion from '@components/Settings/AccountAccordion';
-import { useQueryClient } from '@tanstack/react-query';
 import GeneralAccordion from '@components/Settings/GeneralAccordion';
 
-export default function Settings() {
-  const queryClient = useQueryClient();
-  
-  async function signOut() {
-    queryClient.invalidateQueries();
-    supabase.auth.signOut();
+interface AccordionState {
+  general: boolean;
+  preferences: boolean;
+  account: boolean;
+}
+
+const initialState: AccordionState = {
+  general: false,
+  preferences: false,
+  account: false,
+}
+
+const reducer = (state: AccordionState, action: SettingsAccordionAction) => {
+  switch (action.type) {
+    case "ACCOUNT":
+      return {
+        ...state,
+        account: true,
+        general: false,
+        preferences: false
+      };
+    case "PREFERENCES":
+      return {
+        ...state,
+        account: false,
+        preferences: true,
+        general: false,
+      };
+    case "GENERAL":
+      return {
+        ...state,
+        general: true,
+        account: false,
+        preferences: false
+      };
+    case "NONE":
+      return {
+        ...state,
+        general: false,
+        preferences: false,
+        account: false,
+      };
+
+    default:
+      return state;
   }
+}
+
+export default function Settings() {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <div>
-      <h1>Settings</h1>
-      
-      <GeneralAccordion/>
-      <PreferencesAccordion/>
-      <AccountAccordion/>
-
-      <Button 
-        variant="contained" 
-        onClick={signOut}
-        style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
-      >
-        Log Out
-      </Button>
+      <GeneralAccordion expanded={state.general} dispatch={dispatch}/>
+      <PreferencesAccordion expanded={state.preferences} dispatch={dispatch}/>
+      <AccountAccordion expanded={state.account} dispatch={dispatch}/>
     </div>
   );
 }

@@ -1,16 +1,16 @@
 import { Divider } from "@mui/material";
 import { useEffect, useReducer } from "react";
-import useUser from "@hooks/useUser";
 import ThreadedMessages from "@components/ThreadedMessages";
 import ChatHeader from "@components/Header/ChatHeader";
 import ChatTextInput from "@components/ChatTextInput";
-import { ChatAction } from "@utils/types";
+import { ChatAction, ChatGPTPrompt, ChatMessage } from "@utils/types";
+import useChatGPT from "@hooks/useChatGPT";
 
 interface ChatState {
-  messages: string[];
+  messages: ChatMessage[];
 }
 
-const intialChatState: ChatState = {
+const initialChatState: ChatState = {
   messages: []
 }
 
@@ -36,11 +36,24 @@ interface IHomeProps {
 }
 
 export default function Home(props: IHomeProps) {
-  const user = useUser();
-  const [state, dispatch] = useReducer(reducer, intialChatState);
+  const { isReady, submitPrompt, loadingResponse } = useChatGPT();
+  const [state, dispatch] = useReducer(reducer, initialChatState);
 
   useEffect(() => {
-    console.log("Messages Updated:", state.messages[state.messages.length - 1]);
+    async function submitNewPrompt() {
+      const prompt: ChatGPTPrompt = {
+        prompt: state.messages[state.messages.length - 1].message,
+      }
+
+      const response = await submitPrompt(prompt);
+      dispatch({ type: "ADD_MESSAGE", payload: { message: response, submission: 'BOT' } });
+    }
+
+    if(isReady && 
+      state.messages.length > 0 && 
+      state.messages[state.messages.length - 1].submission === "USER") {
+      submitNewPrompt();
+    }
   }, [state.messages]);
 
   return (
@@ -57,7 +70,7 @@ export default function Home(props: IHomeProps) {
       <ChatHeader dispatch={dispatch} />
       <ThreadedMessages messages={state.messages} />
       <Divider style={{ marginTop: 'auto', marginBottom: "1rem" }} />
-      <ChatTextInput dispatch={dispatch} />
+      <ChatTextInput dispatch={dispatch} isBotReady={isReady} loadingResponse={loadingResponse} />
     </div>
   );
 }

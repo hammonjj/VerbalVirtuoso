@@ -6,11 +6,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditEmailDialog from "@components/Dialogs/EditEmailDialog";
 import { supabase } from "@utils/supabaseClient";
 import useToast from "@hooks/useToast";
+import { SettingsAccordionAction } from "@utils/types";
 
-export default function AccountAccordion() {
+interface AccountAccordionProps {
+  expanded: boolean;
+  dispatch: React.Dispatch<SettingsAccordionAction>;
+}
+
+export default function AccountAccordion(props: AccountAccordionProps) {
   const user = useUser();
   const { showError, showSuccess } = useToast();
-  const [expanded, setExpanded] = useState(false);
 
   const [editEmailModalOpen, setEditEmailModalOpen] = useState(false);
 
@@ -26,11 +31,19 @@ export default function AccountAccordion() {
       showSuccess("Password Reset Email Sent - Check your spam folder if you don't see it in your inbox");
     }
   }
+  
   return (
     <>
-      <EditEmailDialog open={editEmailModalOpen} currentEmail={user?.email ?? ""} handleClose={() => setEditEmailModalOpen(false)} />
-      <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} >
-        <AccordionSummary aria-controls="panel1d-content" id="vehicle-accordion" expandIcon={<ExpandMoreIcon />}>
+      <EditEmailDialog 
+        open={editEmailModalOpen} 
+        currentEmail={user?.email ?? ""} 
+        handleClose={() => setEditEmailModalOpen(false)} 
+      />
+      <Accordion 
+        expanded={props.expanded} 
+        onClick={() => {props.dispatch({ type: (props.expanded ? "NONE" : "ACCOUNT") })}}
+      >
+        <AccordionSummary aria-controls="panel1d-content" id="account-accordion" expandIcon={<ExpandMoreIcon />}>
           <Typography>Account</Typography>
         </AccordionSummary>
         <AccordionDetails style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -44,7 +57,7 @@ export default function AccountAccordion() {
         </AccordionDetails>
         <AccordionDetails style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography>Update Password</Typography>
-          <Button onClick={onPasswordUpdate}>Send Password Update Email</Button>
+          <Button onClick={onPasswordUpdate}>Send Secure Email</Button>
         </AccordionDetails>
       </Accordion>
     </>
