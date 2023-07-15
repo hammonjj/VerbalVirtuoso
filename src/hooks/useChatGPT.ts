@@ -37,6 +37,7 @@ export default function useChatGPT() {
     setLoadingResponse(true);
 
     let prompts = [
+      {"role": "system", "content": "Use markdown to format responses"},
       /*{"role": "system", "content": "Use HTML tags to format responses, include p tags for paragraphs, emphasis tags for emphasis, and so on. Don't use p tags for only one sentence or one paragraph"},*/
       {"role": "user", "content": prompt.prompt}];
 

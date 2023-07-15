@@ -1,2 +1,2 @@
-# Verbal Virtuoso
+# Prompt Box
 ## Description

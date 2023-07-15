@@ -11,8 +11,8 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
 		sourcemap: true,
   },
 	manifest: {
-		name: "Verbal Virtuoso",
-		short_name: "Verbal Virtuoso",
+		name: "Prompt Box",
+		short_name: "Prompt Box",
 		description: "A frontend for ChatGPT",
 		icons: [
 			{
